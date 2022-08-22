@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { ApolloServer } from 'apollo-server-micro';
-import { GlobalTypes } from '../../graphql/back/types';
+import { GlobalTypes } from '@graphql/server/types';
+import { GlobalResolvers } from '@graphql/server/resolvers';
 import NextCors from 'nextjs-cors';
 
 const HandleServer = async (req: NextApiRequest, res: NextApiResponse) => {
   const server = new ApolloServer({
     typeDefs: [...GlobalTypes],
-    resolvers: [],
+    resolvers: [...GlobalResolvers],
     introspection: true,
   });
 
@@ -23,7 +24,10 @@ export const config = {
   },
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   await NextCors(req, res, {
     methods: ['POST', 'OPTIONS', 'GET', 'HEAD'],
     origin: '*',
