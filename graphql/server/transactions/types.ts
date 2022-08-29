@@ -8,6 +8,16 @@ const TransactionTypes = gql`
     concept: String
     user: User
   }
+
+  input CreateTransactionInput {
+    amount: Float!
+    concept: String!
+    date: Date
+  }
+
+  type Mutation {
+    createTransaction(data: CreateTransactionInput): Transaction
+  }
 `;
 
 export { TransactionTypes };
