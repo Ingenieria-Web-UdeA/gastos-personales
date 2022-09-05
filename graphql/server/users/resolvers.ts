@@ -13,6 +13,12 @@ const UserResolvers: Resolver = {
       });
       return transactions;
     },
+    bankAccounts: async (parent, args) =>
+      await prisma.bankAccount.findMany({
+        where: {
+          userId: parent.id,
+        },
+      }),
   },
   Query: {
     obtenerUsuarios: async () => {

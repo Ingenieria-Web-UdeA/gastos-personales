@@ -6,13 +6,22 @@ const TransactionTypes = gql`
     amount: Float
     type: String
     concept: String
+    date: Date
     user: User
+    bankAccount: BankAccount
+  }
+
+  enum Enum_TransactionType {
+    Expense
+    Income
   }
 
   input CreateTransactionInput {
     amount: Float!
     concept: String!
-    date: Date
+    date: Date!
+    transactionType: Enum_TransactionType!
+    bankAccountId: String!
   }
 
   type Mutation {

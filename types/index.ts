@@ -1,4 +1,5 @@
 import { NextApiRequest } from 'next/types';
+import { BankAccount, Transaction } from '@prisma/client';
 
 export interface Context {
   //   session: Session;
@@ -19,3 +20,7 @@ export type ParsedFormData = Record<
   string,
   string | File | number | boolean | { file: File; id: string }
 >;
+
+export interface ExtendedTransaction extends Transaction {
+  bankAccount: BankAccount;
+}

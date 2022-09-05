@@ -10,6 +10,9 @@ const GET_USER_TRANSACTIONS = gql`
         amount
         concept
         type
+        bankAccount {
+          name
+        }
       }
     }
   }

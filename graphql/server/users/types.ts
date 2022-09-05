@@ -8,6 +8,7 @@ const UserTypes = gql`
     phoneNumber: String
     document: String
     transactions: [Transaction]
+    bankAccounts: [BankAccount]
   }
 
   input UserCreateInput {
