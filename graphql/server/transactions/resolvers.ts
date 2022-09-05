@@ -14,7 +14,7 @@ const TransactionResolvers: Resolver = {
   },
   Query: {},
   Mutation: {
-    createTransaction: async (parent, args) => {
+    createTransaction: async (parent, args, context) => {
       return await prisma.transaction.create({
         data: {
           amount: args.data.amount,
@@ -28,7 +28,7 @@ const TransactionResolvers: Resolver = {
           },
           user: {
             connect: {
-              email: 'dsaldarriaga@prevalentware.com',
+              email: context.session.user?.email ?? '',
             },
           },
         },

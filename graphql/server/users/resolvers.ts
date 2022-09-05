@@ -25,7 +25,10 @@ const UserResolvers: Resolver = {
       const users = await prisma.user.findMany();
       return users;
     },
-    obtenerUsuario: async (parent, args) => {
+    obtenerUsuario: async (parent, args, context) => {
+      if (!context.session) {
+        return null;
+      }
       const user = await prisma.user.findUnique({
         where: {
           email: args.email,

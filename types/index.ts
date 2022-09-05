@@ -1,8 +1,9 @@
 import { NextApiRequest } from 'next/types';
 import { BankAccount, Transaction } from '@prisma/client';
+import { Session } from 'next-auth';
 
 export interface Context {
-  //   session: Session;
+  session: Session;
   req: NextApiRequest;
 }
 

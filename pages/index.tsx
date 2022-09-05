@@ -2,7 +2,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_USER_TRANSACTIONS } from '@graphql/client/queries/users';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from 'react';
 import { Dialog } from '@mui/material';
 import { CREATE_TRANSACTION } from '@graphql/client/mutations/transactions';
 import { toast } from 'react-toastify';
@@ -11,18 +17,23 @@ import { transactionEnumMapping } from 'types/enumMapping';
 import { GET_USER_BANK_ACCOUNTS } from '@graphql/client/queries/bankAccounts';
 import { ExtendedTransaction } from 'types';
 import { BankAccount } from '@prisma/client';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Home: NextPage = () => {
+  const { data: session, status } = useSession();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { data, loading } = useQuery(GET_USER_TRANSACTIONS, {
     variables: {
-      email: 'dsaldarriaga@prevalentware.com',
+      email: session?.user?.email ?? '',
     },
     fetchPolicy: 'cache-and-network',
   });
 
-  if (loading) {
+  useEffect(() => {
+    console.log(session, status);
+  }, [status, session]);
+
+  if (loading || status === 'loading') {
     return <div>Loading...</div>;
   }
 
@@ -38,13 +49,20 @@ const Home: NextPage = () => {
       </Head>
       <div className='flex flex-col'>
         <div className='flex'>
-          <button
-            type='button'
-            onClick={() => signIn('auth0')}
-            className='primary'
-          >
-            Iniciar sesion
-          </button>
+          {status === 'unauthenticated' && (
+            <button
+              type='button'
+              onClick={() => signIn('auth0')}
+              className='primary'
+            >
+              Iniciar sesion
+            </button>
+          )}
+          {status === 'authenticated' && (
+            <button type='button' onClick={() => signOut()} className='primary'>
+              Cerrar Sesión
+            </button>
+          )}
         </div>
         <div className='w-full flex flex-col items-center gap-4'>
           {data?.obtenerUsuario && (
@@ -97,13 +115,14 @@ interface CreateTransactionProps {
 }
 
 const CreateTransaction = ({ setOpenModal }: CreateTransactionProps) => {
+  const { data: session } = useSession();
   const { form, formData, updateFormData } = useFormData(null);
   const { data: bankAccountData, loading: bankAccountLoading } = useQuery(
     GET_USER_BANK_ACCOUNTS,
     {
       variables: {
         where: {
-          email: 'dsaldarriaga@prevalentware.com',
+          email: session?.user?.email ?? '',
         },
       },
       fetchPolicy: 'cache-and-network',

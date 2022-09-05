@@ -3,9 +3,13 @@ import { ApolloServer } from 'apollo-server-micro';
 import { GlobalTypes } from '@graphql/server/types';
 import { GlobalResolvers } from '@graphql/server/resolvers';
 import NextCors from 'nextjs-cors';
+import { getSession } from 'next-auth/react';
 
 const HandleServer = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getSession({ req });
+
   const server = new ApolloServer({
+    context: () => ({ session }),
     typeDefs: [...GlobalTypes],
     resolvers: [...GlobalResolvers],
     introspection: true,

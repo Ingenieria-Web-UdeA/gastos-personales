@@ -15,6 +15,11 @@ enum Enum_TransactionType {
   Expense
 }
 
+enum Enum_RoleName {
+  ADMIN
+  USER
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -42,6 +47,15 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Role {
+  id   String        @id @default(cuid())
+  name Enum_RoleName @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
 model User {
   id            String        @id @default(cuid())
   name          String
@@ -52,6 +66,7 @@ model User {
   bankAccounts  BankAccount[]
   accounts      Account[]
   sessions      Session[]
+  roles         Role[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
