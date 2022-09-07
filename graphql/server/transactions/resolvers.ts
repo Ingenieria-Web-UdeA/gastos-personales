@@ -4,12 +4,16 @@ import { Resolver } from 'types';
 
 const TransactionResolvers: Resolver = {
   Transaction: {
-    bankAccount: async (parent, args) => {
-      return await prisma.bankAccount.findUnique({
-        where: {
-          id: parent.bankAccountId,
-        },
-      });
+    bankAccount: async (parent, args, context) => {
+      if (context.session.user.roles?.some((role) => role.name === 'ADMIN')) {
+        return await prisma.bankAccount.findUnique({
+          where: {
+            id: parent.bankAccountId,
+          },
+        });
+      }
+
+      return null;
     },
   },
   Query: {},

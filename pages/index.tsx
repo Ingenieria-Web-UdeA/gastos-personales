@@ -16,8 +16,9 @@ import useFormData from 'hooks/useFormData';
 import { transactionEnumMapping } from 'types/enumMapping';
 import { GET_USER_BANK_ACCOUNTS } from '@graphql/client/queries/bankAccounts';
 import { ExtendedTransaction } from 'types';
-import { BankAccount } from '@prisma/client';
+import { BankAccount, Enum_RoleName } from '@prisma/client';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import PrivateComponent from '@components/PrivateComponent';
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
@@ -69,13 +70,15 @@ const Home: NextPage = () => {
             <>
               <div className='flex gap-2'>
                 <h1>Transacciones para {data.obtenerUsuario.name}</h1>
-                <button
-                  type='button'
-                  onClick={() => setOpenModal(true)}
-                  className='primary'
-                >
-                  Crear nueva
-                </button>
+                <PrivateComponent roleList={[Enum_RoleName.ADMIN]}>
+                  <button
+                    type='button'
+                    onClick={() => setOpenModal(true)}
+                    className='primary'
+                  >
+                    Crear nueva
+                  </button>
+                </PrivateComponent>
               </div>
               <table>
                 <thead>
@@ -83,7 +86,9 @@ const Home: NextPage = () => {
                     <th>Cantidad</th>
                     <th>Concepto</th>
                     <th>Tipo</th>
-                    <th>Cuenta</th>
+                    <PrivateComponent roleList={[Enum_RoleName.ADMIN]}>
+                      <th>Cuenta</th>
+                    </PrivateComponent>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,7 +98,9 @@ const Home: NextPage = () => {
                         <td>{t.amount}</td>
                         <td>{t.concept}</td>
                         <td>{transactionEnumMapping[t.type]}</td>
-                        <td>{t.bankAccount.name}</td>
+                        <PrivateComponent roleList={[Enum_RoleName.ADMIN]}>
+                          <td>{t.bankAccount?.name ?? ''}</td>
+                        </PrivateComponent>
                       </tr>
                     )
                   )}
