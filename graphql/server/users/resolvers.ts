@@ -48,8 +48,6 @@ const UserResolvers: Resolver = {
         data: {
           name: args.data.name,
           email: args.data.email,
-          phoneNumber: args.data.phoneNumber,
-          document: args.data.document,
         },
       });
       return newUser;

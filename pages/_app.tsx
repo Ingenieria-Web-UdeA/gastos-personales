@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import useApolloClient from 'hooks/useApolloClient';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'styles/globals.css';
@@ -14,7 +15,14 @@ const MyApp = ({
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
-        <Component {...pageProps} />
+        <>
+          <Head>
+            <title>{`${
+              pageProps.name ?? ''
+            } | Sistema de gastos personales`}</title>
+          </Head>
+          <Component {...pageProps} />
+        </>
         <ToastContainer />
       </ApolloProvider>
     </SessionProvider>

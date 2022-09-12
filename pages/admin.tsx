@@ -1,6 +1,5 @@
 import { matchRoles } from '@utils/matchRoles';
 import { GetServerSidePropsContext } from 'next';
-import Link from 'next/link';
 import React from 'react';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -8,9 +7,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (isPublic) {
     return {
-      props: {
-        name,
-      },
+      props: { name },
     };
   }
 
@@ -24,24 +21,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: {
-      name,
-    },
+    props: { name },
   };
 }
 
-const IndexPage = () => {
-  return (
-    <div className='flex flex-col'>
-      <span>Esto es una pagina publica</span>
-      <Link href='/transactions'>
-        <a>Ir a la pagina de transacciones</a>
-      </Link>
-      <Link href='/admin'>
-        <a>Ir a la pagina de admin</a>
-      </Link>
-    </div>
-  );
+const AdminPage = () => {
+  return <div>Pagina que solo es visible a administradores</div>;
 };
 
-export default IndexPage;
+export default AdminPage;

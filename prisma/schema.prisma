@@ -47,6 +47,17 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Page {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  path     String  @unique
+  isPublic Boolean @default(false)
+  roles    Role[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Role {
   id   String        @id @default(cuid())
   name Enum_RoleName @unique
@@ -54,6 +65,7 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   users     User[]
+  pages     Page[]
 }
 
 model User {
