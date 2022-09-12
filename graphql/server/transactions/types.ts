@@ -1,16 +1,6 @@
 import { gql } from 'apollo-server-micro';
 
 const TransactionTypes = gql`
-  type Transaction {
-    id: ID
-    amount: Float
-    type: String
-    concept: String
-    date: Date
-    user: User
-    bankAccount: BankAccount
-  }
-
   enum Enum_TransactionType {
     Expense
     Income

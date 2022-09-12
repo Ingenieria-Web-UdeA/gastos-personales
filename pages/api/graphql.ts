@@ -4,14 +4,16 @@ import { GlobalTypes } from '@graphql/server/types';
 import { GlobalResolvers } from '@graphql/server/resolvers';
 import NextCors from 'nextjs-cors';
 import { getSession } from 'next-auth/react';
+import { types } from 'prisma/generated/graphql/types';
+import { resolvers } from 'prisma/generated/graphql/resolvers';
 
 const HandleServer = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
 
   const server = new ApolloServer({
     context: () => ({ session }),
-    typeDefs: [...GlobalTypes],
-    resolvers: [...GlobalResolvers],
+    typeDefs: [...GlobalTypes, ...types],
+    resolvers: [...GlobalResolvers, ...resolvers],
     introspection: true,
   });
 

@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.10.0",
     "@mui/material": "^5.10.2",
     "@next-auth/prisma-adapter": "^1.0.4",
+    "@prevalentware/prisma-cosmo": "^0.1.14",
     "@prisma/client": "^4.1.1",
     "apollo-server-micro": "^3.10.0",
     "apollo3-cache-persist": "^0.14.1",
