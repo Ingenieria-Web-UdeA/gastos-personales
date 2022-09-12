@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint  pages/**",
-    "lint:fix": "eslint --fix  pages/**"
+    "lint:fix": "eslint --fix  pages/**",
+    "cosmo": "cosmo && prettier --config .prettierrc prisma/generated/graphql/**/*.ts --write"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
