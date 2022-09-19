@@ -17,25 +17,28 @@ import {
 import { signIn, signOut, useSession } from 'next-auth/react';
 import PrivateComponent from '@components/PrivateComponent';
 import { matchRoles } from '@utils/matchRoles';
+import { uploadFormFiles } from '@utils/uploadS3';
+import { nanoid } from 'nanoid';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { roleCheck, isPublic, name } = await matchRoles({ context });
+  // const { roleCheck, isPublic, name } = await matchRoles({ context });
 
-  if (isPublic) {
-    return {
-      props: { name },
-    };
-  }
+  // if (isPublic) {
+  //   return {
+  //     props: { name },
+  //   };
+  // }
 
-  if (!roleCheck) {
-    return {
-      redirect: {
-        destination: '/unauthorized',
-        permanent: false,
-      },
-    };
-  }
+  // if (!roleCheck) {
+  //   return {
+  //     redirect: {
+  //       destination: '/unauthorized',
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
+  const name = 'Transactions';
   return {
     props: { name },
   };
@@ -98,6 +101,7 @@ const Home: NextPage = () => {
                     <PrivateComponent roleList={[Enum_RoleName.ADMIN]}>
                       <th>Cuenta</th>
                     </PrivateComponent>
+                    <th>Descargar archivo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -110,6 +114,15 @@ const Home: NextPage = () => {
                         <PrivateComponent roleList={[Enum_RoleName.ADMIN]}>
                           <td>{t.bankAccount?.name ?? ''}</td>
                         </PrivateComponent>
+                        <td>
+                          <a
+                            href={`${t.file}`}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            Descargar
+                          </a>
+                        </td>
                       </tr>
                     )
                   )}
@@ -150,6 +163,11 @@ const CreateTransaction = ({ setOpenModal }: CreateTransactionProps) => {
   const submitForm = async (e: SyntheticEvent) => {
     e.preventDefault();
 
+    const uploadedFormData = await uploadFormFiles(
+      formData,
+      `gastos-personales/${session?.user.id ?? ''}/${nanoid()}`
+    );
+
     try {
       await createTransaction({
         variables: {
@@ -159,6 +177,7 @@ const CreateTransaction = ({ setOpenModal }: CreateTransactionProps) => {
             date: formData.date,
             transactionType: formData.transactionType,
             bankAccountId: formData.bankAccount,
+            file: uploadedFormData.file,
           },
         },
         refetchQueries: [GET_USER_TRANSACTIONS],
@@ -195,6 +214,12 @@ const CreateTransaction = ({ setOpenModal }: CreateTransactionProps) => {
           <span>Fecha</span>
           <input name='date' type='date' required />
         </label>
+
+        <label htmlFor='file'>
+          <span>Archivo adjunto</span>
+          <input name='file' type='file' />
+        </label>
+
         <label htmlFor='transactionType'>
           <span>Tipo de transacción</span>
           <select name='transactionType' defaultValue=''>

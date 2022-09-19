@@ -25,3 +25,4 @@ export type ParsedFormData = Record<
 export interface ExtendedTransaction extends Transaction {
   bankAccount: BankAccount;
 }
+

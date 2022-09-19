@@ -1,5 +1,6 @@
 /* eslint-disable arrow-body-style */
 import prisma from '@config/prisma';
+import { getObjectInBucket } from '@utils/getObjectInBucket';
 import { Resolver } from 'types';
 
 const TransactionResolvers: Resolver = {
@@ -15,10 +16,18 @@ const TransactionResolvers: Resolver = {
 
       return null;
     },
+    file: async (parent) => {
+      const bucket = process.env.NEXT_PUBLIC_MEDIA_BUCKET_NAME ?? '';
+      const path = parent.file?.replace(
+        `https://${bucket}.s3.amazonaws.com/`,
+        ''
+      );
+      return await getObjectInBucket(bucket, path);
+    },
   },
   Query: {},
   Mutation: {
-    createTransaction: async (parent, args, context) => {
+    crearTransaccion: async (parent, args, context) => {
       return await prisma.transaction.create({
         data: {
           amount: args.data.amount,
@@ -30,6 +39,7 @@ const TransactionResolvers: Resolver = {
               id: args.data.bankAccountId,
             },
           },
+          file: args.data.file,
           user: {
             connect: {
               email: context.session.user?.email ?? '',

@@ -12,10 +12,11 @@ const TransactionTypes = gql`
     date: Date!
     transactionType: Enum_TransactionType!
     bankAccountId: String!
+    file: String!
   }
 
   type Mutation {
-    createTransaction(data: CreateTransactionInput): Transaction
+    crearTransaccion(data: CreateTransactionInput): Transaction
   }
 `;
 

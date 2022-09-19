@@ -90,6 +90,7 @@ model Transaction {
   type          Enum_TransactionType
   date          DateTime
   concept       String
+  file          String?               
   user          User                 @relation(fields: [userId], references: [id])
   userId        String
   bankAccount   BankAccount          @relation(fields: [bankAccountId], references: [id])

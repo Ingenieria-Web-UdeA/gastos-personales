@@ -5,7 +5,6 @@ const GET_USER_TRANSACTIONS = gql`
     obtenerUsuario(email: $email) {
       email
       name
-      phoneNumber
       transactions {
         amount
         concept
@@ -13,6 +12,7 @@ const GET_USER_TRANSACTIONS = gql`
         bankAccount {
           name
         }
+        file
       }
     }
   }
